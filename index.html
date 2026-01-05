@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>新年のご挨拶（おみくじ付き）</title>
+  <style>
+    :root{
+      --bg1:#071021; --bg2:#0b1730;
+      --card:#0f1f3a; --card2:#0c1930;
+      --text:#eaf2ff; --muted:#b8c7e6;
+      --accent:#ffd36a; --accent2:#77d0ff;
+      --good:#7dffb2; --warn:#ffd36a;
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 600px at 15% 20%, rgba(119,208,255,.18), transparent 60%),
+        radial-gradient(700px 500px at 85% 15%, rgba(255,211,106,.16), transparent 60%),
+        radial-gradient(900px 700px at 50% 90%, rgba(125,255,178,.10), transparent 65%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 14px;
+    }
+    a{color:var(--accent2)}
+    .wrap{width:min(980px, 100%);}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow:hidden;
+    }
+    .pad{padding:20px}
+    .top{
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+      padding:18px 20px;
+      background: linear-gradient(90deg, rgba(119,208,255,.12), rgba(255,211,106,.10));
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .title{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .title h1{
+      margin:0; font-size:20px; letter-spacing:.02em;
+    }
+    .title .sub{
+      margin:0; color:var(--muted); font-size:13px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; color:rgba(255,255,255,.92);
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      white-space:nowrap;
+    }
+    .badge .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(125,255,178,.12);
+    }
+
+    .message{
+      display:grid; gap:12px;
+    }
+    .message p{margin:0; line-height:1.85; color:rgba(234,242,255,.92)}
+    .muted{color:var(--muted)}
+    .hr{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin:14px 0;
+    }
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .input{
+      display:flex; gap:8px; align-items:center;
+      background: rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px 12px; border-radius: 12px;
+      flex: 1 1 240px;
+    }
+    .input label{font-size:12px; color:var(--muted); white-space:nowrap}
+    .input input{
+      width:100%;
+      border:none; outline:none;
+      background: transparent;
+      color: var(--text);
+      font-size:14px;
+    }
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      padding:12px 14px;
+      border-radius: 14px;
+      color: #081022;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #ffe7a3);
+      box-shadow: 0 10px 28px rgba(255,211,106,.20);
+      transition: transform .08s ease, filter .15s ease;
+    }
+    .btn:active{transform: translateY(1px) scale(.99)}
+    .btn.secondary{
+      color: rgba(234,242,255,.92);
+      font-weight: 650;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:none;
+    }
+
+    .omikuji{
+      display:grid; gap:12px;
+    }
+    .result{
+      background: rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding:14px 14px;
+      position:relative;
+      overflow:hidden;
+      min-height: 160px;
+    }
+    .result .big{
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing:.04em;
+      margin:0 0 6px 0;
+    }
+    .result .big.good{color:var(--good)}
+    .result .big.warn{color:var(--warn)}
+    .result .small{margin:0; color:rgba(234,242,255,.92); line-height:1.75}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .chip{
+      font-size:12px; color:rgba(234,242,255,.92);
+      padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .hint{font-size:12px; color:var(--muted); margin:0}
+
+    footer{
+      margin-top:12px;
+      text-align:center;
+      color:rgba(184,199,230,.85);
+      font-size:12px;
+    }
+
+    /* ささやかな紙吹雪 */
+    .confetti{
+      pointer-events:none;
+      position:absolute; inset:0;
+      opacity:0;
+    }
+    .confetti.on{opacity:1}
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="top">
+        <div class="title">
+          <h1>新年のご挨拶</h1>
+          <p class="sub" id="dateLine">—</p>
+        </div>
+        <div class="badge" title="このページは1ファイルで動きます（サーバー不要）">
+          <span class="dot"></span>
+          <span>おみくじ付き</span>
+        </div>
+      </div>
+
+      <div class="pad grid">
+        <!-- 左：メッセージ -->
+        <div class="card" style="background:rgba(0,0,0,.14); border-color: rgba(255,255,255,.10); box-shadow:none;">
+          <div class="pad message">
+            <p class="muted" style="margin:0">To: 職場のみなさま</p>
+
+            <!-- ▼ ここを書き換えると文面を調整できます ▼ -->
+            <p>
+              あけましておめでとうございます。<br>
+              旧年中は大変お世話になりました。<br>
+              本年もどうぞよろしくお願いいたします。
+            </p>
+            <p>
+              ささやかですが、ページ右側に <b>おみくじ</b> を用意しました。<br>
+              今年の運だめしにどうぞ。
+            </p>
+            <p class="muted" style="margin-top:2px">
+              ※ うまく表示されない場合は、ブラウザを更新（再読み込み）してください。
+            </p>
+            <!-- ▲ ここまで ▲ -->
+
+            <div class="hr"></div>
+
+            <div class="row">
+              <div class="input">
+                <label for="name">あなたのお名前（任意）</label>
+                <input id="name" placeholder="例：井上 / 山田 / Kenji" autocomplete="off" />
+              </div>
+              <button class="btn secondary" id="applyName">名前を反映</button>
+            </div>
+
+            <p class="hint" id="personalLine">—</p>
+
+            <div class="row" style="margin-top:6px">
+              <button class="btn secondary" id="copyLink">URLをコピー</button>
+              <button class="btn secondary" id="shareLink">共有（スマホ対応）</button>
+            </div>
+            <p class="hint">職場の方へは、このページのURLをチャットやメールで送るだけでOKです。</p>
+          </div>
+        </div>
+
+        <!-- 右：おみくじ -->
+        <div class="card" style="background:rgba(0,0,0,.14); border-color: rgba(255,255,255,.10); box-shadow:none;">
+          <div class="pad omikuji">
+            <h2 style="margin:0; font-size:16px; letter-spacing:.02em;">おみくじ</h2>
+            <p class="hint" style="margin-top:-6px">ボタンを押すと結果が出ます（何度でも可）。</p>
+
+            <div class="result" aria-live="polite">
+              <canvas class="confetti" id="confetti"></canvas>
+              <p class="big" id="fortuneBig">まだ引いていません</p>
+              <p class="small" id="fortuneText">「おみくじを引く」を押して、今年の運だめしをどうぞ。</p>
+              <div class="chips" id="chips" style="display:none"></div>
+            </div>
+
+            <div class="row">
+              <button class="btn" id="draw">おみくじを引く</button>
+              <button class="btn secondary" id="reset">リセット</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <p class="hint">
+              ※ このページは外部通信なしで動作します（社内ネットワークでも表示しやすい構成）。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span id="footerYear">—</span> / Made with HTML + CSS + JavaScript（1ファイル）
+    </footer>
+  </main>
+
+<script>
+(function(){
+  // ===== 日付表示 =====
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth()+1;
+  const d = now.getDate();
+  const w = ["日","月","火","水","木","金","土"][now.getDay()];
+  document.getElementById("dateLine").textContent = `${y}年${m}月${d}日（${w}）`;
+  document.getElementById("footerYear").textContent = `© ${y}`;
+
+  // ===== パーソナライズ =====
+  const nameInput = document.getElementById("name");
+  const personalLine = document.getElementById("personalLine");
+  const applyName = document.getElementById("applyName");
+
+  function setPersonalLine(name){
+    if(!name){
+      personalLine.textContent = "（お名前を入れると、メッセージが少しだけパーソナライズされます）";
+      return;
+    }
+    personalLine.textContent = `${name} さんへ：今年も互いに無理なく、よい一年にしていきましょう。`;
+  }
+
+  // URLに ?name= があれば反映
+  const params = new URLSearchParams(location.search);
+  const initialName = params.get("name") || "";
+  if(initialName){
+    nameInput.value = initialName;
+    setPersonalLine(initialName);
+  } else {
+    setPersonalLine("");
+  }
+
+  applyName.addEventListener("click", ()=>{
+    const name = nameInput.value.trim();
+    setPersonalLine(name);
+
+    // URLも書き換え（共有しやすく）
+    const u = new URL(location.href);
+    if(name) u.searchParams.set("name", name);
+    else u.searchParams.delete("name");
+    history.replaceState(null, "", u.toString());
+  });
+
+  // ===== 共有/コピー =====
+  const copyBtn = document.getElementById("copyLink");
+  copyBtn.addEventListener("click", async ()=>{
+    try{
+      await navigator.clipboard.writeText(location.href);
+      copyBtn.textContent = "コピーしました！";
+      setTimeout(()=>copyBtn.textContent="URLをコピー", 1200);
+    }catch(e){
+      alert("コピーできませんでした。URLを手動でコピーしてください。");
+    }
+  });
+
+  const shareBtn = document.getElementById("shareLink");
+  shareBtn.addEventListener("click", async ()=>{
+    try{
+      if(navigator.share){
+        await navigator.share({
+          title: document.title,
+          text: "新年のご挨拶（おみくじ付き）",
+          url: location.href
+        });
+      } else {
+        alert("この端末は共有機能に未対応です。『URLをコピー』をご利用ください。");
+      }
+    }catch(e){
+      // 共有キャンセル等は無視
+    }
+  });
+
+  // ===== おみくじデータ =====
+  // weight（比率）が大きいほど出やすい
+  const fortunes = [
+    {title:"大吉", weight: 10, mood:"good",
+      text:"追い風。小さく始めたことが後から効いてきます。まずは“今日できる最小の一歩”を。"},
+    {title:"中吉", weight: 18, mood:"good",
+      text:"安定運。周囲との連携がカギです。相談・共有を少し増やすと流れが良くなります。"},
+    {title:"小吉", weight: 22, mood:"warn",
+      text:"積み上げ運。焦らず、土台づくりが吉。整理整頓・準備が効きます。"},
+    {title:"吉", weight: 26, mood:"warn",
+      text:"可もなく不可もなく。予定に“余白”を残すと安心。週1回だけでも振り返りを。"},
+    {title:"末吉", weight: 16, mood:"warn",
+      text:"後半伸びる運。最初は様子見でOK。途中で方向転換できる柔らかさが武器です。"},
+    {title:"凶", weight: 8, mood:"warn",
+      text:"慎重運。無理しないのが最優先。抱え込まず、早めに助けを求めると大きな事故を防げます。"}
+  ];
+
+  const extraChips = [
+    {k:"仕事", v:["段取りが九割","まず共有","型を作る","味方を増やす","抱えない"]},
+    {k:"健康", v:["睡眠最強","水分","散歩","深呼吸","肩を回す"]},
+    {k:"学び", v:["1日10分","書いて整理","質問する","真似てから工夫","振り返り"]},
+    {k:"人間関係", v:["挨拶＋一言","感謝を言語化","早めに相談","相手の事情を想像","決めつけない"]},
+  ];
+
+  function pickWeighted(items){
+    const total = items.reduce((s,x)=>s + x.weight, 0);
+    let r = Math.random() * total;
+    for(const it of items){
+      r -= it.weight;
+      if(r <= 0) return it;
+    }
+    return items[items.length-1];
+  }
+
+  function pick(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // ===== 表示更新 =====
+  const big = document.getElementById("fortuneBig");
+  const text = document.getElementById("fortuneText");
+  const chipsWrap = document.getElementById("chips");
+
+  function setResult(f, chips){
+    big.textContent = f.title;
+    big.classList.remove("good","warn");
+    big.classList.add(f.mood === "good" ? "good" : "warn");
+    text.textContent = f.text;
+
+    chipsWrap.innerHTML = "";
+    chipsWrap.style.display = "flex";
+    for(const c of chips){
+      const el = document.createElement("span");
+      el.className = "chip";
+      el.textContent = c;
+      chipsWrap.appendChild(el);
+    }
+  }
+
+  // ===== 紙吹雪（軽量） =====
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  let confettiTimer = null;
+
+  function burstConfetti(){
+    // canvasサイズを親に合わせる
+    const parent = canvas.parentElement;
+    const rect = parent.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.floor(rect.width));
+    canvas.height = Math.max(1, Math.floor(rect.height));
+    canvas.classList.add("on");
+
+    const pieces = Array.from({length: 80}, ()=>({
+      x: Math.random()*canvas.width,
+      y: -20 - Math.random()*canvas.height*0.2,
+      vy: 1.4 + Math.random()*2.8,
+      vx: -1.2 + Math.random()*2.4,
+      r: 2 + Math.random()*4,
+      a: 0.8 + Math.random()*0.2,
+      rot: Math.random()*Math.PI
+    }));
+
+    let frames = 0;
+    const maxFrames = 80;
+
+    function tick(){
+      frames++;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      for(const p of pieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += 0.15;
+
+        // グラデーションっぽく白寄りで描画（色指定を最小限に）
+        ctx.save();
+        ctx.globalAlpha = p.a;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fillRect(-p.r, -p.r, p.r*2, p.r*1.3);
+        ctx.restore();
+      }
+
+      if(frames < maxFrames){
+        confettiTimer = requestAnimationFrame(tick);
+      } else {
+        canvas.classList.remove("on");
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+    }
+    if(confettiTimer) cancelAnimationFrame(confettiTimer);
+    tick();
+  }
+
+  // ===== ボタン処理 =====
+  document.getElementById("draw").addEventListener("click", ()=>{
+    const f = pickWeighted(fortunes);
+
+    const chips = extraChips.map(cat => `${cat.k}：${pick(cat.v)}`);
+    setResult(f, chips);
+
+    // 大吉/中吉のときだけ軽く演出
+    if(f.title === "大吉" || f.title === "中吉") burstConfetti();
+
+    // 直近の結果を保存（リロードしても残る）
+    localStorage.setItem("ny_fortune", JSON.stringify({f, chips, t: Date.now()}));
+  });
+
+  document.getElementById("reset").addEventListener("click", ()=>{
+    big.textContent = "まだ引いていません";
+    big.classList.remove("good","warn");
+    text.textContent = "「おみくじを引く」を押して、今年の運だめしをどうぞ。";
+    chipsWrap.style.display = "none";
+    localStorage.removeItem("ny_fortune");
+  });
+
+  // 保存済みがあれば復元（24時間以内）
+  try{
+    const saved = JSON.parse(localStorage.getItem("ny_fortune") || "null");
+    if(saved && saved.f && saved.t && (Date.now()-saved.t) < 24*60*60*1000){
+      setResult(saved.f, saved.chips || []);
+    }
+  }catch(e){}
+
+})();
+</script>
+</body>
+</html>
