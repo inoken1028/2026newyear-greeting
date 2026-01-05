@@ -42,7 +42,6 @@
       padding:26px 14px;
     }
 
-    a{color:var(--accent2)}
     .wrap{width:min(1040px, 100%);}
 
     .card{
@@ -146,6 +145,12 @@
       color:rgba(26,42,58,.92);
     }
     .muted{color:var(--muted)}
+    .hint{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.6;
+    }
     .hr{
       height:1px;
       background: rgba(17,34,51,.12);
@@ -157,30 +162,6 @@
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-    }
-
-    .input{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      background: rgba(255,255,255,.85);
-      border:1px solid rgba(17,34,51,.14);
-      padding:10px 12px;
-      border-radius: 12px;
-      flex: 1 1 240px;
-    }
-    .input label{
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap
-    }
-    .input input{
-      width:100%;
-      border:none;
-      outline:none;
-      background: transparent;
-      color: var(--ink);
-      font-size:14px;
     }
 
     .btn{
@@ -196,10 +177,6 @@
       transition: transform .08s ease, filter .15s ease;
     }
     .btn:active{transform: translateY(1px) scale(.99)}
-    .btn.blue{
-      background: linear-gradient(90deg, var(--accent2), #9bdeff);
-      box-shadow: 0 12px 26px rgba(59,182,255,.18);
-    }
     .btn.green{
       background: linear-gradient(90deg, var(--accent3), #aef2df);
       box-shadow: 0 12px 26px rgba(46,211,163,.18);
@@ -212,37 +189,27 @@
       font-weight:700;
     }
 
-    .hint{
-      margin:0;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.6;
-    }
-
     .result{
       position:relative;
       background: rgba(255,255,255,.92);
       border:1px solid rgba(17,34,51,.12);
       border-radius: 16px;
       padding:14px;
-      min-height: 200px;
+      min-height: 210px;
       overflow:hidden;
     }
-
     .result .big{
       margin:0 0 6px 0;
       font-size:28px;
       font-weight:900;
       letter-spacing:.04em;
     }
-
     .gradtext{
       background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
       -webkit-background-clip: text;
       background-clip:text;
       color:transparent;
     }
-
     .result .lead{
       margin:0;
       line-height:1.75;
@@ -269,7 +236,6 @@
       background: rgba(46,211,163,.08);
       border-color: rgba(46,211,163,.18);
     }
-
     .mini .k{
       margin:0 0 4px 0;
       font-size:12px;
@@ -299,19 +265,7 @@
       color:rgba(26,42,58,.92);
     }
 
-    .toggle{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      background: rgba(255,255,255,.86);
-      border:1px solid rgba(17,34,51,.14);
-    }
-    .toggle input{transform: translateY(1px);}
-    .toggle span{font-size:12px;color:var(--muted)}
-
-    /* confetti (light) */
+    /* confetti */
     canvas.confetti{
       position:absolute;
       inset:0;
@@ -320,14 +274,7 @@
     }
     canvas.confetti.on{opacity:1}
 
-    footer{
-      margin-top:12px;
-      text-align:center;
-      color:rgba(81,98,116,.95);
-      font-size:12px;
-    }
-
-    /* small header illustration */
+    /* small header mark */
     .mark{
       display:flex;
       align-items:center;
@@ -340,6 +287,13 @@
       display:grid;place-items:center;
     }
     .logo svg{opacity:.95}
+
+    footer{
+      margin-top:12px;
+      text-align:center;
+      color:rgba(81,98,116,.95);
+      font-size:12px;
+    }
   </style>
 </head>
 
@@ -361,7 +315,7 @@
             <p class="sub" id="dateLine">—</p>
           </div>
         </div>
-        <div class="pill" title="おみくじは“先生の仕事の元気が出る”方向に寄せています（説教くささゼロ）">
+        <div class="pill" title="凶なし／説教なし／生活ファーストで、現場の元気が出るメッセージにしています">
           <span class="spark"></span>
           <span>モチベUPおみくじ</span>
         </div>
@@ -384,42 +338,25 @@
           </p>
           <p style="margin-top:10px">
             右側に <b>「教職員向けおみくじ」</b> を用意しました。<br>
-            授業・生徒対応・チーム連携・自分のケアのヒントが出ます。よかったらどうぞ。
+            生徒対応・チーム連携・自分のケアのヒントが出ます。気軽に何度でもどうぞ。
           </p>
           <!-- ▲ここまで▲ -->
 
           <div class="hr"></div>
-
-          <div class="row">
-            <div class="input">
-              <label for="name">お名前（任意）</label>
-              <input id="name" placeholder="例：井上 / 山田 / Kenji" autocomplete="off" />
-            </div>
-            <button class="btn ghost" id="applyName">名前を反映</button>
-          </div>
-
-          <p class="hint" id="personalLine">—</p>
-
-          <div class="row" style="margin-top:6px">
-            <button class="btn blue" id="copyLink">URLをコピー</button>
-            <button class="btn ghost" id="shareLink">共有（スマホ対応）</button>
-          </div>
-          <p class="hint">※ URLに <code>?name=〇〇</code> を付けると、名前入りリンクになります。</p>
+          <p class="hint">
+            ※ このページは外部通信なしで動作します（校内ネットワークでも表示しやすい構成）。
+          </p>
         </div>
 
         <!-- right -->
         <div class="inner">
           <h2 class="section-title">おみくじ（先生の仕事モード）</h2>
           <p class="hint" style="margin-top:-6px">
-            「今日の結果を固定」をONにすると、<b>1日1回</b>の“朝のスイッチ”として使えます。
+            何回でも引けます。気分転換にどうぞ。
           </p>
 
           <div class="row" style="margin-top:10px">
-            <label class="toggle" title="ONだと当日中は同じ結果を表示します">
-              <input type="checkbox" id="lockToday" checked />
-              <span>今日の結果を固定（1日1回）</span>
-            </label>
-            <button class="btn ghost" id="reset">リセット</button>
+            <button class="btn ghost" id="reset">表示をリセット</button>
           </div>
 
           <div style="height:10px"></div>
@@ -430,14 +367,6 @@
             <p class="lead" id="fortuneLead">「おみくじを引く」を押すと、今日のヒントが出ます。</p>
 
             <div class="cards" id="cards" style="display:none">
-              <div class="mini pink">
-                <p class="k">今日のミニ目標</p>
-                <p class="v" id="goal">—</p>
-              </div>
-              <div class="mini">
-                <p class="k">授業・学級のヒント</p>
-                <p class="v" id="classHint">—</p>
-              </div>
               <div class="mini green">
                 <p class="k">生徒対応のひと言</p>
                 <p class="v" id="studentHint">—</p>
@@ -461,12 +390,7 @@
 
           <div class="row" style="margin-top:12px">
             <button class="btn green" id="draw">おみくじを引く</button>
-            <button class="btn ghost" id="copyResult">結果をコピー</button>
           </div>
-
-          <p class="hint" style="margin-top:10px">
-            ※ 外部通信なしで動作します（校内ネットワークでも表示しやすい構成）。
-          </p>
         </div>
       </div>
     </section>
@@ -487,88 +411,12 @@
   document.getElementById("dateLine").textContent = `${y}年${m}月${d}日（${w}）`;
   document.getElementById("footerYear").textContent = `© ${y}`;
 
-  // ===== パーソナライズ =====
-  const nameInput = document.getElementById("name");
-  const personalLine = document.getElementById("personalLine");
-  const applyName = document.getElementById("applyName");
-
-  function setPersonalLine(name){
-    if(!name){
-      personalLine.textContent = "（お名前を入れると、メッセージが少しだけパーソナライズされます）";
-      return;
-    }
-    personalLine.textContent = `${name} さんへ：今年も、軽やかに。良い一年になりますように。`;
-  }
-
-  const params = new URLSearchParams(location.search);
-  const initialName = params.get("name") || "";
-  if(initialName){
-    nameInput.value = initialName;
-    setPersonalLine(initialName);
-  }else{
-    setPersonalLine("");
-  }
-
-  applyName.addEventListener("click", () => {
-    const name = nameInput.value.trim();
-    setPersonalLine(name);
-    const u = new URL(location.href);
-    if(name) u.searchParams.set("name", name);
-    else u.searchParams.delete("name");
-    history.replaceState(null, "", u.toString());
-  });
-
-  // ===== 共有/コピー =====
-  const copyBtn = document.getElementById("copyLink");
-  copyBtn.addEventListener("click", async () => {
-    try{
-      await navigator.clipboard.writeText(location.href);
-      copyBtn.textContent = "コピーしました！";
-      setTimeout(() => copyBtn.textContent = "URLをコピー", 1200);
-    }catch(e){
-      alert("コピーできませんでした。URLを手動でコピーしてください。");
-    }
-  });
-
-  const shareBtn = document.getElementById("shareLink");
-  shareBtn.addEventListener("click", async () => {
-    try{
-      if(navigator.share){
-        await navigator.share({
-          title: document.title,
-          text: "新年のご挨拶（教職員向けおみくじ）",
-          url: location.href
-        });
-      }else{
-        alert("この端末は共有機能に未対応です。『URLをコピー』をご利用ください。");
-      }
-    }catch(e){}
-  });
-
-  // ===== おみくじ（教職員向け / 凶なし / 説教なし） =====
+  // ===== おみくじ（教職員向け / 凶なし / 説教なし / 生活ファースト） =====
   const fortunes = [
     {title:"大吉", weight: 18, lead:"いい流れ。今日は『軽やかに一歩』がはまりやすい日。"},
     {title:"中吉", weight: 34, lead:"安定の追い風。いつもの段取りがちゃんと味方してくれます。"},
     {title:"小吉", weight: 30, lead:"じわじわ良い日。小さな工夫が、後から効いてきます。"},
     {title:"吉",   weight: 18, lead:"ちょうどいい日。頑張りすぎず、整えながら進めばOK。"}
-  ];
-
-  const goals = [
-    "今日は“負担が軽い”仕事を1つ片づけて、気分の余白を作る。",
-    "授業の冒頭で、笑える小ネタを1つだけ入れてみる。",
-    "生徒の“よかったところ”を、1人だけ具体的に言葉にする。",
-    "職員室で会った人に、ひとことプラスの挨拶を添える。",
-    "やることを1つだけ減らす（明日でもいいものを明日に回す）。",
-    "放課後の予定を守るために、今日の締め切りを1つだけ早める。",
-    "帰り道に寄り道できる余力を残す（5分早く出られたら勝ち）。"
-  ];
-
-  const classHints = [
-    "『今日のゴールはこれ』を一言で置くと、授業が軽く回ります。",
-    "板書（スライド）を“3点セット”にする：結論／理由／例。",
-    "発問は“短く”→理由は後から。場が温まってから深掘りでOK。",
-    "テンポが落ちたら、1分だけペア相談。空気が戻りやすいです。",
-    "最後に『今日いちばん残った言葉』を回収すると、余韻が残ります。"
   ];
 
   const studentHints = [
@@ -623,22 +471,17 @@
   }
 
   // ===== UI DOM =====
-  const lockToday = document.getElementById("lockToday");
   const drawBtn = document.getElementById("draw");
   const resetBtn = document.getElementById("reset");
-  const copyResultBtn = document.getElementById("copyResult");
 
   const fortuneBig = document.getElementById("fortuneBig");
   const fortuneLead = document.getElementById("fortuneLead");
   const cards = document.getElementById("cards");
 
-  const goal = document.getElementById("goal");
-  const classHint = document.getElementById("classHint");
   const studentHint = document.getElementById("studentHint");
   const teamHint = document.getElementById("teamHint");
   const selfCare = document.getElementById("selfCare");
   const praise = document.getElementById("praise");
-
   const chipsWrap = document.getElementById("chips");
 
   // ===== confetti =====
@@ -704,44 +547,17 @@
     tick();
   }
 
-  // ===== 保存（1日固定用） =====
-  const todayKey = () => {
-    const t = new Date();
-    const yyyy = t.getFullYear();
-    const mm = String(t.getMonth()+1).padStart(2,"0");
-    const dd = String(t.getDate()).padStart(2,"0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
-
-  const STORE_KEY = "school_staff_omikuji_v2";
-
-  function loadSaved(){
-    try{
-      const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
-      return s;
-    }catch(e){ return null; }
-  }
-
-  function saveResult(payload){
-    localStorage.setItem(STORE_KEY, JSON.stringify(payload));
-  }
-
-  function clearSaved(){
-    localStorage.removeItem(STORE_KEY);
-  }
-
   function renderResult(payload){
     fortuneBig.textContent = payload.f.title;
     fortuneLead.textContent = payload.f.lead;
 
-    goal.textContent = payload.goal;
-    classHint.textContent = payload.classHint;
     studentHint.textContent = payload.studentHint;
     teamHint.textContent = payload.teamHint;
     selfCare.textContent = payload.selfCare;
     praise.textContent = payload.praise;
 
     cards.style.display = "grid";
+
     chipsWrap.style.display = "flex";
     chipsWrap.innerHTML = "";
     for(const c of payload.chips){
@@ -751,7 +567,6 @@
       chipsWrap.appendChild(el);
     }
 
-    // 演出：大吉/中吉のときだけ
     if(payload.f.title === "大吉" || payload.f.title === "中吉"){
       burstConfetti();
     }
@@ -759,91 +574,27 @@
 
   function makePayload(){
     const f = pickWeighted(fortunes);
-    const chips = Array.from({length: 4}, () => pick(tags));
-
     return {
-      day: todayKey(),
       f,
-      goal: pick(goals),
-      classHint: pick(classHints),
       studentHint: pick(studentHints),
       teamHint: pick(teamHints),
       selfCare: pick(selfCares),
       praise: pick(praises),
-      chips
+      chips: Array.from({length: 4}, () => pick(tags))
     };
   }
 
-  function applyTodayLockState(){
-    const saved = loadSaved();
-    const locked = lockToday.checked;
-
-    if(locked && saved && saved.day === todayKey()){
-      renderResult(saved);
-      drawBtn.textContent = "今日はもう引きました";
-      drawBtn.disabled = true;
-      drawBtn.style.filter = "grayscale(.25) opacity(.85)";
-      return;
-    }
-
-    drawBtn.disabled = false;
-    drawBtn.textContent = "おみくじを引く";
-    drawBtn.style.filter = "";
-  }
-
-  lockToday.addEventListener("change", () => {
-    applyTodayLockState();
-  });
-
   drawBtn.addEventListener("click", () => {
-    const payload = makePayload();
-    renderResult(payload);
-
-    if(lockToday.checked){
-      saveResult(payload);
-      applyTodayLockState();
-    }
+    renderResult(makePayload());
   });
 
   resetBtn.addEventListener("click", () => {
-    clearSaved();
     fortuneBig.textContent = "まだ引いていません";
     fortuneLead.textContent = "「おみくじを引く」を押すと、今日のヒントが出ます。";
     cards.style.display = "none";
     chipsWrap.style.display = "none";
     chipsWrap.innerHTML = "";
-    applyTodayLockState();
   });
-
-  copyResultBtn.addEventListener("click", async () => {
-    const title = fortuneBig.textContent || "おみくじ";
-    const lead = fortuneLead.textContent || "";
-
-    const lines = [
-      `【教職員おみくじ】${title}`,
-      lead,
-      "",
-      `■今日のミニ目標：${goal.textContent || ""}`,
-      `■授業・学級：${classHint.textContent || ""}`,
-      `■生徒対応：${studentHint.textContent || ""}`,
-      `■チーム連携：${teamHint.textContent || ""}`,
-      `■自分へのケア：${selfCare.textContent || ""}`,
-      `■ねぎらい：${praise.textContent || ""}`,
-      "",
-      `（${location.href}）`
-    ].join("\n");
-
-    try{
-      await navigator.clipboard.writeText(lines);
-      copyResultBtn.textContent = "結果をコピーしました！";
-      setTimeout(() => copyResultBtn.textContent = "結果をコピー", 1200);
-    }catch(e){
-      alert("コピーできませんでした。");
-    }
-  });
-
-  // 初期表示
-  applyTodayLockState();
 })();
 </script>
 </body>
