@@ -195,7 +195,7 @@
       border:1px solid rgba(17,34,51,.12);
       border-radius: 16px;
       padding:14px;
-      min-height: 210px;
+      min-height: 190px;
       overflow:hidden;
     }
     .result .big{
@@ -247,21 +247,6 @@
       margin:0;
       font-size:13px;
       line-height:1.7;
-      color:rgba(26,42,58,.92);
-    }
-
-    .chips{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .chip{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(17,34,51,.04);
-      border:1px solid rgba(17,34,51,.10);
       color:rgba(26,42,58,.92);
     }
 
@@ -317,7 +302,7 @@
         </div>
         <div class="pill" title="凶なし／説教なし／生活ファーストで、現場の元気が出るメッセージにしています">
           <span class="spark"></span>
-          <span>モチベUPおみくじ</span>
+          <span>セルフケアおみくじ</span>
         </div>
       </div>
 
@@ -326,20 +311,19 @@
         <div class="inner message">
           <h2 class="section-title">
             ごあいさつ
-            <span class="badge">年賀状がわり</span>
+            <span class="badge">年賀状がわりですが…</span>
           </h2>
 
           <!-- ▼ここをあなたの文面に書き換えOK▼ -->
-          <p class="muted" style="margin:0 0 6px 0;">To: 教職員のみなさま</p>
-          <p>
+          <p class="muted" style="margin:0 0 6px 0;">2026年 新年のご挨拶<p>
             あけましておめでとうございます。<br>
             旧年中はさまざまな場面で支えていただき、ありがとうございました。<br>
             今年は78期生にとってまさに「6年の集大成」の年となりますが、引き続き78期に関わっておられる全ての先生方のお力を合わせてともに歩んでいければと思っています。<br>
             本年もどうぞよろしくお願い申し上げます。
           </p>
           <p style="margin-top:10px">
-            ささやかですが、<b>新年の「おみくじ」</b> も用意しました。<br>
-            気軽に何度でもお試しください。
+            ささやかですが、<b>おみくじ</b> も用意しました。<br>
+            気軽にお試しください。
           </p>
           <!-- ▲ここまで▲ -->
 
@@ -351,7 +335,7 @@
 
         <!-- right -->
         <div class="inner">
-          <h2 class="section-title">おみくじ</h2>
+          <h2 class="section-title">セルフケアおみくじ</h2>
           <p class="hint" style="margin-top:-6px">
             何回でも引けます。気分転換にどうぞ。
           </p>
@@ -365,17 +349,9 @@
           <div class="result" aria-live="polite">
             <canvas class="confetti" id="confetti"></canvas>
             <p class="big gradtext" id="fortuneBig">まだ引いていません</p>
-            <p class="lead" id="fortuneLead">「おみくじを引く」を押すと、今日のヒントが出ます。</p>
+            <p class="lead" id="fortuneLead">「おみくじを引く」を押すと、メッセージが出ます。</p>
 
             <div class="cards" id="cards" style="display:none">
-              <div class="mini green">
-                <p class="k">生徒対応のひと言</p>
-                <p class="v" id="studentHint">—</p>
-              </div>
-              <div class="mini">
-                <p class="k">チーム連携</p>
-                <p class="v" id="teamHint">—</p>
-              </div>
               <div class="mini green">
                 <p class="k">自分へのケア</p>
                 <p class="v" id="selfCare">—</p>
@@ -385,8 +361,6 @@
                 <p class="v" id="praise">—</p>
               </div>
             </div>
-
-            <div class="chips" id="chips" style="display:none"></div>
           </div>
 
           <div class="row" style="margin-top:12px">
@@ -412,49 +386,31 @@
   document.getElementById("dateLine").textContent = `${y}年${m}月${d}日（${w}）`;
   document.getElementById("footerYear").textContent = `© ${y}`;
 
-  // ===== おみくじ（教職員向け / 凶なし / 説教なし / 生活ファースト） =====
+  // ===== おみくじ（凶なし / 説教なし / 生活ファースト） =====
   const fortunes = [
-    {title:"大吉", weight: 18, lead:"いい流れ。今日は『軽やかに一歩』がはまりやすい日。"},
-    {title:"中吉", weight: 34, lead:"安定の追い風。いつもの段取りがちゃんと味方してくれます。"},
-    {title:"小吉", weight: 30, lead:"じわじわ良い日。小さな工夫が、後から効いてきます。"},
-    {title:"吉",   weight: 18, lead:"ちょうどいい日。頑張りすぎず、整えながら進めばOK。"}
-  ];
-
-  const studentHints = [
-    "今日は“聞く日”でもOK。短い相づちだけで十分届くことがあります。",
-    "生徒の言葉を1回だけ言い換えて返すと、会話がすっと進みやすい。",
-    "困りごとは“いま”と“次”に分けると、負担が軽くなります。",
-    "正解探しより、選択肢を2つ用意する感じで。本人が選べると前に進みます。",
-    "小さな進歩を拾う日。『そこできたのいいね』が効きます。"
-  ];
-
-  const teamHints = [
-    "共有は短文でOK：『結論→次→期限』の3つだけで十分伝わります。",
-    "頼みごとは“相手の都合を聞く一言”があると、空気が柔らかくなります。",
-    "今日は“助けを借りる日”でもOK。早めに言うほどラクになります。",
-    "雑談の一言が、仕事の連携をスムーズにします（本当に）。",
-    "困りごとを“見える化”すると、チームの安心感が上がります。"
+    {title:"大吉", weight: 18, lead:"良い流れが生まれる日。今日はすべてがうまくいきます。"},
+    {title:"中吉", weight: 34, lead:"追い風が吹く日。自分のペースでOK。"},
+    {title:"小吉", weight: 30, lead:"じわじわ良くなる日。これまでの積み重ねが効いてきます。"},
+    {title:"吉",   weight: 18, lead:"肩の力を抜くのにちょうど良い日。必要以上にがんばりすぎないことも大切。"}
   ];
 
   const selfCares = [
-    "仕事は生活の一部。今日は“自分のリズム”を守る方を優先で。",
-    "休憩は短くても効きます。1分だけ立って肩を回すだけでもOK。",
-    "『今日はここまで』の線引きができたら、それは勝ちです。",
-    "完璧じゃなくて大丈夫。心地よく続けられる形がいちばん強い。",
-    "帰宅後の楽しみを1つ確保する（小さくていい、あるだけで強い）。"
+    "今日は“省エネ運転”でいきましょう。優先度が低いものは明日に回してOK。",
+    "水分を一口。体が整うと、気持ちも少し整います。",
+    "帰りの時間を守るために、区切りを先に決めておく。",
+    "今日は“完成度7割”でOK。続けられる形がいちばん強い。",
+    "帰宅後の楽しみを1つ確保する（小さな喜びが大きな効果に）。"
   ];
 
   const praises = [
-    "今日も現場を回している時点で、十分すごいです。",
-    "あなたの“気づき”が、生徒の安心につながっています。",
-    "丁寧に見ていることは、ちゃんと伝わっています。",
-    "うまくいった点、きっとあります。見つけられるのは強さです。",
-    "背負いすぎない工夫ができたら、それも立派な仕事です。"
-  ];
-
-  const tags = [
-    "ゆるくいこう", "余白づくり", "現場あるある", "小さな工夫",
-    "声かけ", "整える", "チームで回す", "生活ファースト"
+    "今日も現場を回している、それだけでも本当にすごいことなのです。",
+    "あなたの気づきが、誰かの安心になっています。",
+    "丁寧な仕事は、ちゃんと他人にも伝わります。",
+    "“やり切った”も、“なんとか持ちこたえた”も立派な成果です。",
+    "完璧じゃなくて大丈夫。ここまで来たあなたは強いです。",
+    "今日の自分に、ひと言だけ『よくやった』でOK。",
+    "背負いすぎない工夫も、立派な仕事の一部です。",
+    "あなたのペースで大丈夫。続けていることが力になります。"
   ];
 
   function pick(arr){
@@ -478,12 +434,8 @@
   const fortuneBig = document.getElementById("fortuneBig");
   const fortuneLead = document.getElementById("fortuneLead");
   const cards = document.getElementById("cards");
-
-  const studentHint = document.getElementById("studentHint");
-  const teamHint = document.getElementById("teamHint");
   const selfCare = document.getElementById("selfCare");
   const praise = document.getElementById("praise");
-  const chipsWrap = document.getElementById("chips");
 
   // ===== confetti =====
   const canvas = document.getElementById("confetti");
@@ -504,7 +456,7 @@
       "rgba(255,178,0,.85)"
     ];
 
-    const pieces = Array.from({length: 95}, () => ({
+    const pieces = Array.from({length: 85}, () => ({
       x: Math.random()*canvas.width,
       y: -20 - Math.random()*canvas.height*0.25,
       vy: 1.6 + Math.random()*3.2,
@@ -516,7 +468,7 @@
     }));
 
     let frames = 0;
-    const maxFrames = 85;
+    const maxFrames = 80;
 
     const tick = () => {
       frames++;
@@ -552,21 +504,10 @@
     fortuneBig.textContent = payload.f.title;
     fortuneLead.textContent = payload.f.lead;
 
-    studentHint.textContent = payload.studentHint;
-    teamHint.textContent = payload.teamHint;
     selfCare.textContent = payload.selfCare;
     praise.textContent = payload.praise;
 
     cards.style.display = "grid";
-
-    chipsWrap.style.display = "flex";
-    chipsWrap.innerHTML = "";
-    for(const c of payload.chips){
-      const el = document.createElement("span");
-      el.className = "chip";
-      el.textContent = c;
-      chipsWrap.appendChild(el);
-    }
 
     if(payload.f.title === "大吉" || payload.f.title === "中吉"){
       burstConfetti();
@@ -574,14 +515,10 @@
   }
 
   function makePayload(){
-    const f = pickWeighted(fortunes);
     return {
-      f,
-      studentHint: pick(studentHints),
-      teamHint: pick(teamHints),
+      f: pickWeighted(fortunes),
       selfCare: pick(selfCares),
       praise: pick(praises),
-      chips: Array.from({length: 4}, () => pick(tags))
     };
   }
 
@@ -591,10 +528,8 @@
 
   resetBtn.addEventListener("click", () => {
     fortuneBig.textContent = "まだ引いていません";
-    fortuneLead.textContent = "「おみくじを引く」を押すと、今日のヒントが出ます。";
+    fortuneLead.textContent = "「おみくじを引く」を押すと、メッセージが出ます。";
     cards.style.display = "none";
-    chipsWrap.style.display = "none";
-    chipsWrap.innerHTML = "";
   });
 })();
 </script>
